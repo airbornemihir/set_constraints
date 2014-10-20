@@ -325,6 +325,27 @@
 
 \begin{frame}[allowframebreaks]
   \frametitle{Soundness}
+
+  \begin{itemize}
+  \item For a soundness result, we'll have to construct operational
+    semantics for a fragment of C - best to keep it simple.
+    $$ e ::= x | *e | \& e | e_1 = e_2 | e1,e2 $$
+  \item Let's construct a mapping $\theta$ from dynamic memory
+    locations $Loc$ to syntactic locations $SyntacticLoc$.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{theta.png}
+    \end{figure}
+  \item Program transformation: every time the address of a variable
+    appears in an expression, add a new program variable $\&_i$ to
+    store the result and substitute $\&_i$ in the result. The type
+    inference rule is fairly obvious.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{theta_inference_rule.png}
+    \end{figure}
+  \end{itemize}
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{operational_semantics.png}
