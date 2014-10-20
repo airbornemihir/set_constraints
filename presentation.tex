@@ -13,17 +13,10 @@
 }
 \date{20 October, 2014}
 
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline for section \thesection}
-    \tableofcontents[currentsection]
-  \end{frame}
-}
-
 \usepackage{amsmath}
 \usepackage{graphicx}
 
+\setbeamertemplate{footline}[frame number]
 \begin{document}
 
 %--- the titlepage frame -------------------------%
@@ -365,10 +358,6 @@
     \includegraphics[scale=0.3]{steensgard_comparison.png}
   \end{figure}
 \end{frame}
-
-\section{Test section two}
-\begin{frame} Test \end{frame}
-\begin{frame} Test \end{frame}
 
 \begin{frame}[allowframebreaks]
   \frametitle{References}
