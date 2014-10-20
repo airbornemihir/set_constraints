@@ -143,44 +143,188 @@
     \centering
     \includegraphics[scale=0.3]{resolution_rules.png}
   \end{figure}
+
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
+  \frametitle{Andersen-style analysis}
+  We analyse this fragment of C. Note that this excludes several
+  control-flow constructs such as for loops, while loops and goto
+  which are redundant under flow-insensitivity.
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{language_syntax.png}
   \end{figure}
-\end{frame}
 
-\begin{frame}
+  \framebreak
+
+  \begin{itemize}
+  \item In this system, types follow this grammar.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{andersen_type_grammar.png}
+    \end{figure}
+  \item The constructors $ref$ and $lam_n$ have these signatures.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{andersen_constructor_signatures.png}
+    \end{figure}
+  \item Having $\alpha$ renamed the program variables, we can be sure
+    each is unique, and use the inference rules in \boldit{And+Common}.
+  \end{itemize}
+
+  \framebreak
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{andersen_inference_rules.png}
   \end{figure}
-\end{frame}
 
-\begin{frame}
+  \framebreak
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{common_inference_rules.png}
   \end{figure}
+
+  \framebreak
+
+  \begin{itemize}
+  \item Let $\vdash_A$ mean "provable in \boldit{And+Common}".
+  \item Then, Andersen's points-to relation $P_A: L \rightarrow 2^L$
+    is given by $ y \in P_A(x) $ if 
+    $$ CS \vdash_A ref(p_{get}=p_{set}=y, f_{get}=f_{set}=y') \subseteq_s x $$
+  \end{itemize}
+
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
+  \frametitle{Steensgard-style analysis}
+
+  \begin{itemize}
+  \item In this system, types follow this grammar.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{steensgard_type_grammar.png}
+    \end{figure}
+  \item The constructors $ref$ and $lam_n$ have these signatures.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{steensgard_constructor_signatures.png}
+    \end{figure}
+  \item Steensgard's system uses unification where Andersen's had
+    inclusion, thus: 
+    \begin{itemize}
+    \item the old $p_{get}$(covariant) and $p_{set}$(contravariant)
+      merge into $p$(invariant).
+    \item the old $f_{get}$(covariant) and $f_{set}$(contravariant)
+      merge into $f$(invariant).
+    \item the field $t$ is added to store a tag; this refers to the
+      equivalence class the reference belongs to.
+    \end{itemize}
+  \item Having $\alpha$ renamed the program variables, we can be sure
+    each is unique, and use the inference rules in \boldit{Ste+Common}.
+  \end{itemize}
+
+  \framebreak
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{steensgard_inference_rules.png}
   \end{figure}
+
+  \framebreak
+
+  \begin{itemize}
+  \item In this analysis, $x =_c y$ (conditional unification) iff
+    $$ \exists c. \vdash c(\dotso) \eg_t x \Rightarrow x_t y $$
+    Intuitively, conditionally unified terms are unified only when one
+    of them is unified with a constructed type.
+  \item Let $\vdash_S$ mean "provable in \boldit{Ste+Common}".
+  \item Then, Steensgard's points-to relation $P_S: L \rightarrow 2^L$
+    is given by $ y \in P_S(x) $ if 
+    $$ CS \vdash_S ref(p=y, f=y', t = y_t) =_t x $$
+  \item In this system, the equivalence class $[x]$ containing a memory
+    location $x$ is given by $[x] = {y: CS \vdash_S x_t = y_t }$
+  \end{itemize}
+
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
+  \frametitle{Exploiting the correspondence between Andersen's and
+    Steengard's analyses}
+
+  \begin{itemize}
+  \item These two analyses are similar enough that we can build a
+    common system, \boldit{Comb} that can implement either, only
+    changing the constructor signatures.
+  \item This is the type grammar.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{combination_type_grammar.png}
+    \end{figure}
+  \item For the Andersen-style analysis, we use these constructor
+    signatures. The $t$ field is ignored.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{combination_andersen_constructor_signatures.png}
+    \end{figure}
+  \item For the Steensgard-style analysis, we use these constructor
+    signatures. $p_{get} = p_{set}$ and $f_{get} = f_{set}$ are required.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{combination_steensgard_constructor_signatures.png}
+    \end{figure}
+
+  \end{itemize}
+
+  \framebreak
+
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{combination_inference_rules.png}
   \end{figure}
+
+  %% \framebreak
+
+  \begin{itemize}
+  \item The rules for this system are similar to those in
+    \boldit{And}; The rules for function definition and application
+    remain the same.
+  \item For Andersen-style analysis, use subset constraints
+    ($\subseteq_{\iota} = \subseteq_s$) and constraint system $CS_s$.
+  \item For Steensgard-style analysis, use conditional equality
+    constraints ($\subseteq_{\iota} = \subseteq_c$) and constraint
+    system $CS_c$ .
+  \item The parameterised points-to relation $Q_{\iota} : L
+    \Rightarrow 2^L $ is given by $y \in Q_{\iota}(x)$ if:
+    $$ CS_{\iota} \vdash ref(p_{get}=p_{set}=y, f_{get}=f_{set}=y',
+    t=y_t) \subseteq_{\iota} x $$
+  \item This lemma shows the equivalence between the points-to sets
+    generated by \boldit{And+Common} and $\boldit{Comb_{s} + Common}$,
+    and also those generated by \boldit{Ste+Common} and
+    $\boldit{Comb_{c}+Common}$.
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{lemma_7_2.png}
+    \end{figure}
+  \item Next lemma: Andersen-style subset inclusion
+    is a sufficient condition for Steensgard-style conditional
+    unification. More formally, if the system $CS_s$ is translated to
+    the system $CS_c$ (i. e. each $\tau_1 \subseteq_s \tau_2$
+    translated to $\tau_1 =_c \tau_2$), then
+    $$ CS_s \vdash \tau_1' \subseteq_s \tau_2' \Rightarrow CS_c \vdash \tau_1' =_c \tau_2' $$
+  \item Using these two lemmas, it's simple to show that $$ y \in
+    P_A(x) \Rightarrow y \in P_s(x) $$
+  \item Pretty cool, right?
+
+  \end{itemize}
+
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
+  \frametitle{Soundness}
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{operational_semantics.png}
