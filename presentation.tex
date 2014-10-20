@@ -220,8 +220,6 @@
     each is unique, and use the inference rules in \boldit{Ste+Common}.
   \end{itemize}
 
-  \framebreak
-
   \begin{figure}
     \centering
     \includegraphics[scale=0.3]{steensgard_inference_rules.png}
@@ -231,7 +229,7 @@
 
   \begin{itemize}
   \item In this analysis, $x =_c y$ (conditional unification) iff
-    $$ \exists c. \vdash c(\dotso) \eg_t x \Rightarrow x_t y $$
+    $$ \exists c. \vdash c(\dotso) \eg_t x \Rightarrow x_t = y_t $$
     Intuitively, conditionally unified terms are unified only when one
     of them is unified with a constructed type.
   \item Let $\vdash_S$ mean "provable in \boldit{Ste+Common}".
@@ -250,8 +248,7 @@
 
   \begin{itemize}
   \item These two analyses are similar enough that we can build a
-    common system, \boldit{Comb} that can implement either, only
-    changing the constructor signatures.
+    common system, \boldit{Comb} that can implement either.
   \item This is the type grammar.
     \begin{figure}
       \centering
