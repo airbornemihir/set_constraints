@@ -109,18 +109,18 @@
   \begin{itemize}
     \item Set of sorts S, including Term and Set.
     \item Each n-ary constructor c has a signature $$ c: \iota_1
-      \dotso \iota_n : S $$
+      \dotso \iota_n \rightarrow S $$
       where each $\iota_i$ is $s$ (covariant) or $\overline{s}$
       (contravariant) for some $s \in S$.
     \item Sort Term: set of constructors $\Sigma_{Term}$, 
       set of variables $V_{Term}$. Terms: variables from $V_{Term}$ or
       constructed terms following some constructor's signature:
-      $$ c:Term \dotso \underbrace{Term \rightarrow Term}_{arity(c)},
+      $$ c:\underbrace{Term \dotso Term}_{arity(c)}  \rightarrow Term,
       c \in \Sigma_{Term} $$
     \item Sort Set: set of constuctors $\Sigma_{Set}$, operations
       ${\cup, \cap, 0, 1}$. Set expressions follow some constructor's
       signature: 
-      $$ c:Set \dotso \underbrace{Set \rightarrow Set}_{arity(c)},
+      $$ c:\underbrace{Set \dotso Set}_{arity(c)} \rightarrow Set,
       c \in \Sigma_{Set} $$
       \begin{figure}
         \centering
